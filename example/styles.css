@@ -1,0 +1,22 @@
+body {
+	margin: 0;
+	padding: 2em;
+}
+
+.columnify {
+	position: relative;
+	width: 90%;
+	margin: auto;
+	overflow: auto;
+}
+
+.column {
+	float: left;
+	width: 33.33%;
+	box-sizing: border-box;
+	padding: 0 1em;
+}
+
+.item {
+	width: 100%;
+}

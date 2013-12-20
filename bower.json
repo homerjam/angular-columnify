@@ -1,0 +1,9 @@
+{
+    "name": "ng-columnify",
+    "version": "0.0.1",
+    "description": "Angular directive that creates balanced columns",
+    "main": "ng-columnify.js",
+    "dependencies": {
+        "angular": ">= 1.2.4"
+    }
+}
