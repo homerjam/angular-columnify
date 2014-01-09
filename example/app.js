@@ -15,4 +15,4 @@ angular.module('ExampleCtrl', []).controller('ExampleCtrl', ['$scope',
     }
 ]);
 
-angular.module('ExampleApp', ['ng-columnify', 'ExampleCtrl']).config(function() {});
+angular.module('ExampleApp', ['angular-columnify', 'ExampleCtrl']).config(function() {});

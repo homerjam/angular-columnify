@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    angular.module('ng-columnify', [])
+    angular.module('angular-columnify', [])
         .directive('ngColumnify', ['$log', '$timeout', '$window',
             function($log, $timeout, $window) {
                 return {

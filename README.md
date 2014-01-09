@@ -1,11 +1,11 @@
-# ng-columnify
+# angular-columnify
 
 Angular directive that creates balanced columns
 
 ## Installation
 
-`bower install ng-columnify`
+`bower install angular-columnify`
 
 ## Demo
 
-http://homerjam.github.io/ng-columnify/
+http://homerjam.github.io/angular-columnify/
