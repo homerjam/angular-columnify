@@ -22,7 +22,8 @@
                             listIdentifier = match[2];
 
                             var defaults = {
-                                columns: 2
+                                columns: 2,
+                                onAppend: function(items) {}
                             };
 
                             var options = angular.extend(defaults, scope.$eval(iAttrs.ngColumnifyOptions));
@@ -110,6 +111,8 @@
 
                                     col.height += item.element[0].clientHeight;
                                 });
+
+                                options.onAppend(_items);
                             };
 
                             var _flow = function(_items) {
