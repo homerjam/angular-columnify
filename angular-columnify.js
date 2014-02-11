@@ -79,7 +79,7 @@
                                 var shortest = 0;
                                 for (var i in colsArr) {
                                     if (i > 0) {
-                                        if (colsArr[i].height < colsArr[i - 1].height) {
+                                        if (colsArr[i].height <= colsArr[i - 1].height) {
                                             shortest = i;
                                         }
                                     }
