@@ -28,15 +28,20 @@
 
                             var options = angular.extend(defaults, scope.$eval(iAttrs.ngColumnifyOptions));
 
-                            var _columns = function() {
-                                if (typeof(options.columns) === 'string') {
-                                    if (typeof(scope[options.columns]) === 'function') {
-                                        return scope[options.columns]();
+                            var _prop = function(propName) {
+                                if (typeof(options[propName]) === 'string') {
+                                    if (typeof(scope[options[propName]]) === 'function') {
+                                        return scope[options[propName]]();
                                     } else {
-                                        $log.error('ngColumnify: columns is not a function');
+                                        $log.error('ngColumnify: ' + propName + ' is not a function');
+                                        return null;
                                     }
-                                } else {
-                                    return options.columns;
+                                } else if (typeof(options[propName]) === 'function') {
+                                    return options[propName]();
+                                } else if (typeof(options[propName]) === 'number') {
+                                    return options[propName];
+                                } else if (typeof(options[propName]) === 'object') {
+                                    $log.error('ngColumnify: ' + propName + ' is not valid');
                                 }
                             };
 
@@ -55,7 +60,7 @@
                             var firstLoad = true,
                                 colsArr = [],
                                 items = [];
-                            scope.columns = _columns();
+                            scope.columns = _prop('columns');
 
                             var _createItems = function() {
                                 for (var i = items.length; i < scope[listIdentifier].length; i++) {
@@ -79,7 +84,7 @@
                                 var shortest = 0;
                                 for (var i in colsArr) {
                                     if (i > 0) {
-                                        if (colsArr[i].height <= colsArr[i - 1].height) {
+                                        if (colsArr[i].height <= colsArr[i - 1].height && colsArr[i - 1].height > 0) {
                                             shortest = i;
                                         }
                                     }
@@ -138,7 +143,7 @@
                             };
 
                             var _resize = function() {
-                                scope.columns = _columns();
+                                scope.columns = _prop('columns');
 
                                 if (!scope.$$phase) {
                                     scope.$apply();
@@ -180,10 +185,10 @@
                                 _reflow();
                             });
 
-                            angular.element($window).on('resize.ngColumnify', _resize);
+                            angular.element($window).on('resize', _resize);
 
                             scope.$on('$destroy', function() {
-                                angular.element($window).off('resize.ngColumnify', _resize);
+                                angular.element($window).off('resize', _resize);
                                 watchItems();
                                 watchCols();
                             });
