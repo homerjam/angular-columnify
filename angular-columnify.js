@@ -150,15 +150,16 @@
                                 }
                             };
 
-                            var watchCols = scope.$watch('columns', function(n, o) {
+                            var init = true,
+                                watchItems, watchCols;
+
+                            watchCols = scope.$watch('columns', function(n, o) {
                                 _reflow();
                             });
 
-                            var init = true;
-
                             $timeout(function() {
 
-                                var watchItems = scope.$watch(listIdentifier, function(n, o) {
+                                watchItems = scope.$watch(listIdentifier, function(n, o) {
                                     _createItems(n);
 
                                     var newItems = [];
