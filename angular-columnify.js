@@ -57,13 +57,13 @@
                                 });
                             }
 
-                            var firstLoad = true,
-                                colsArr = [],
+                            var colsArr = [],
                                 items = [];
+
                             scope.columns = _prop('columns');
 
-                            var _createItems = function() {
-                                for (var i = items.length; i < scope[listIdentifier].length; i++) {
+                            var _createItems = function(list) {
+                                for (var i = items.length; i < list.length; i++) {
                                     var item = {};
                                     item.scope = scope.$new();
                                     items.push(item);
@@ -72,7 +72,7 @@
                                 }
 
                                 for (i = 0; i < items.length; i++) {
-                                    items[i].scope[valueIdentifier] = scope[listIdentifier][i];
+                                    items[i].scope[valueIdentifier] = list[i];
 
                                     if (!items[i].scope.$$phase) {
                                         items[i].scope.$apply();
@@ -133,7 +133,7 @@
                                     _appendItems(_items);
 
                                     tmp.remove();
-                                }, 0);
+                                });
                             };
 
                             var _reflow = function() {
@@ -150,39 +150,28 @@
                                 }
                             };
 
-                            $timeout(function() {
-
-                                _setupColumns();
-
-                                _createItems();
-
-                                _flow(items);
-
-                                firstLoad = false;
-
-                            }, 0);
-
-                            var watchItems = scope.$watch(listIdentifier, function(n, o) {
-                                if (firstLoad) {
-                                    return false;
-                                }
-
-                                _createItems();
-
-                                var newItems = [];
-                                for (var i = 0; i < n.length - o.length; i++) {
-                                    newItems.push(items[o.length + i]);
-                                }
-
-                                _flow(newItems);
+                            var watchCols = scope.$watch('columns', function(n, o) {
+                                _reflow();
                             });
 
-                            var watchCols = scope.$watch('columns', function(n, o) {
-                                if (firstLoad) {
-                                    return false;
-                                }
+                            var init = true;
 
-                                _reflow();
+                            $timeout(function() {
+
+                                var watchItems = scope.$watch(listIdentifier, function(n, o) {
+                                    _createItems(n);
+
+                                    var newItems = [];
+
+                                    for (var i = 0; i < n.length - (init ? 0 : o.length); i++) {
+                                        newItems.push(items[(init ? 0 : o.length) + i]);
+                                    }
+
+                                    _flow(newItems);
+
+                                    init = false;
+                                });
+
                             });
 
                             angular.element($window).on('resize', _resize);
