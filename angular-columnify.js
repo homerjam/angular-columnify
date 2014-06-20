@@ -22,6 +22,8 @@
                             listIdentifier = match[2];
 
                             var defaults = {
+                                $element: iElement,
+                                $columns: [],
                                 columns: 2,
                                 onAppend: function(items) {}
                             };
@@ -31,13 +33,13 @@
                             var _prop = function(propName) {
                                 if (typeof(options[propName]) === 'string') {
                                     if (typeof(scope[options[propName]]) === 'function') {
-                                        return scope[options[propName]]();
+                                        return scope[options[propName]](options);
                                     } else {
                                         $log.error('ngColumnify: ' + propName + ' is not a function');
                                         return null;
                                     }
                                 } else if (typeof(options[propName]) === 'function') {
-                                    return options[propName]();
+                                    return options[propName](options);
                                 } else if (typeof(options[propName]) === 'number') {
                                     return options[propName];
                                 } else if (typeof(options[propName]) === 'object') {
@@ -57,8 +59,7 @@
                                 });
                             }
 
-                            var colsArr = [],
-                                items = [];
+                            var items = [];
 
                             scope.columns = _prop('columns');
 
@@ -82,14 +83,14 @@
 
                             var _shortestCol = function() {
                                 var shortest = 0;
-                                for (var i in colsArr) {
+                                for (var i in options.$columns) {
                                     if (i > 0) {
-                                        if (colsArr[i].height <= colsArr[i - 1].height && colsArr[i - 1].height > 0) {
+                                        if (options.$columns[i].height <= options.$columns[i - 1].height && options.$columns[i - 1].height > 0) {
                                             shortest = i;
                                         }
                                     }
                                 }
-                                return colsArr[shortest];
+                                return options.$columns[shortest];
                             };
 
                             var _setupColumns = function() {
@@ -97,11 +98,11 @@
 
                                 angular.element(iElement[0].querySelectorAll('.column')).remove();
 
-                                colsArr = [];
+                                options.$columns = [];
                                 for (var i = 0; i < Math.max(1, scope.columns); i++) {
                                     var col = angular.element('<div class="column"/>');
                                     iElement.prepend(col);
-                                    colsArr.unshift({
+                                    options.$columns.unshift({
                                         $el: col,
                                         height: 0
                                     });
