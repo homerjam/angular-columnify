@@ -48,20 +48,20 @@
                             };
 
                             var templateItem = iElement.children();
+
                             iElement.children().remove();
+
                             angular.element(iElement[0].previousElementSibling).after(angular.element('<!-- ngColumnify -->'));
 
-                            function _linker(item) {
+                            var _linker = function(item) {
                                 transcludeFn(item.scope, function(clone) {
                                     var itemClone = templateItem.clone();
                                     itemClone.children().replaceWith(clone);
                                     item.element = itemClone;
                                 });
-                            }
+                            };
 
                             var items = [];
-
-                            scope.columns = _prop('columns');
 
                             var _createItems = function(list) {
                                 for (var i = items.length; i < list.length; i++) {
@@ -93,13 +93,13 @@
                                 return options.$columns[shortest];
                             };
 
-                            var _setupColumns = function() {
-                                iElement.attr('data-columns', scope.columns);
+                            var _setupColumns = function(cols) {
+                                iElement.attr('data-columns', cols);
 
                                 angular.element(iElement[0].querySelectorAll('.column')).remove();
 
                                 options.$columns = [];
-                                for (var i = 0; i < Math.max(1, scope.columns); i++) {
+                                for (var i = 0; i < Math.max(1, cols); i++) {
                                     var col = angular.element('<div class="column"/>');
                                     iElement.prepend(col);
                                     options.$columns.unshift({
@@ -138,7 +138,7 @@
                             };
 
                             var _reflow = function() {
-                                _setupColumns();
+                                _setupColumns(scope.columns);
 
                                 _appendItems(items);
                             };
@@ -154,9 +154,9 @@
                             var init = true,
                                 watchItems, watchCols;
 
-                            watchCols = scope.$watch('columns', function(n, o) {
-                                _reflow();
-                            });
+                            _setupColumns(1);
+
+                            scope.columns = _prop('columns');
 
                             $timeout(function() {
 
@@ -172,6 +172,10 @@
                                     _flow(newItems);
 
                                     init = false;
+                                });
+
+                                watchCols = scope.$watch('columns', function(n, o) {
+                                    _reflow();
                                 });
 
                             });
