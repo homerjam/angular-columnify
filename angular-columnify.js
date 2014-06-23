@@ -24,7 +24,7 @@
                             var defaults = {
                                 $element: iElement,
                                 $columns: [],
-                                columns: 2,
+                                columns: 'auto',
                                 onAppend: function(items) {}
                             };
 
@@ -156,6 +156,10 @@
 
                             _setupColumns(1);
 
+                            scope.auto = function(options) {
+                                return Math.round(options.$element[0].clientWidth / options.$columns[0].$el[0].clientWidth);
+                            };
+
                             scope.columns = _prop('columns');
 
                             $timeout(function() {
@@ -180,7 +184,22 @@
 
                             });
 
-                            angular.element($window).on('resize', _resize);
+                            var throttleOnAnimationFrame = function(func) {
+                                var timeout;
+                                return function() {
+                                    var context = this,
+                                        args = arguments;
+                                    $window.cancelAnimationFrame(timeout);
+                                    timeout = $window.requestAnimationFrame(function() {
+                                        func.apply(context, args);
+                                        timeout = null;
+                                    });
+                                };
+                            };
+
+                            var _throttledResize = throttleOnAnimationFrame(_resize);
+
+                            angular.element($window).on('resize', _throttledResize);
 
                             scope.$on('$destroy', function() {
                                 angular.element($window).off('resize', _resize);
