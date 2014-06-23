@@ -160,9 +160,9 @@
                                 return Math.round(options.$element[0].clientWidth / options.$columns[0].$el[0].clientWidth);
                             };
 
-                            scope.columns = _prop('columns');
-
                             $timeout(function() {
+
+                                scope.columns = _prop('columns');
 
                                 watchItems = scope.$watch(listIdentifier, function(n, o) {
                                     _createItems(n);
