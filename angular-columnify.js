@@ -104,6 +104,7 @@
                                     iElement.prepend(col);
                                     options.$columns.unshift({
                                         $el: col,
+                                        items: [],
                                         height: 0
                                     });
                                 }
@@ -126,9 +127,13 @@
 
                                 iElement.append(tmp);
 
+                                var items = [];
+
                                 angular.forEach(_items, function(item, i) {
-                                    tmp.append(item.element);
+                                    items.push(item.element[0]);
                                 });
+
+                                tmp.append(items);
 
                                 $timeout(function() {
                                     _appendItems(_items);
