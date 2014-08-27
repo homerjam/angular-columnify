@@ -21,11 +21,25 @@
                             valueIdentifier = match[1];
                             listIdentifier = match[2];
 
+                            var resetItems = function(items) {
+                                angular.forEach(items, function(item) {
+
+                                    // Re-trigger autoplay
+                                    var videos = item.element[0].querySelectorAll('video[autoplay]');
+                                    angular.forEach(videos, function(video) {
+                                        video.play();
+                                    });
+
+                                });
+                            }
+
                             var defaults = {
                                 $element: iElement,
                                 $columns: [],
                                 columns: 'auto',
-                                onAppend: function(items) {}
+                                onAppend: function(items) {},
+                                resetItemsOnAppend: true,
+                                resetItems: resetItems
                             };
 
                             var options = angular.extend(defaults, scope.$eval(iAttrs.ngColumnifyOptions));
@@ -120,6 +134,10 @@
                                 });
 
                                 options.onAppend(_items);
+
+                                if (options.resetItemsOnAppend) {
+                                    options.resetItems(_items);
+                                }
                             };
 
                             var _flow = function(_items) {
