@@ -96,14 +96,16 @@
                             };
 
                             var _shortestCol = function() {
-                                var shortest = 0;
+                                var shortest = 0,
+                                    height = Infinity;
+
                                 for (var i in options.$columns) {
-                                    if (i > 0) {
-                                        if (options.$columns[i].height <= options.$columns[i - 1].height && options.$columns[i - 1].height > 0) {
-                                            shortest = i;
-                                        }
+                                    if (options.$columns[i].height <= height) {
+                                        shortest = i;
+                                        height = options.$columns[i].height;
                                     }
                                 }
+
                                 return options.$columns[shortest];
                             };
 
@@ -128,9 +130,13 @@
                                 angular.forEach(_items, function(item, i) {
                                     var col = _shortestCol();
 
-                                    col.$el.append(item.element);
+                                    item.col = col;
 
                                     col.height += item.element[0].clientHeight;
+                                });
+
+                                angular.forEach(_items, function(item, i) {
+                                    item.col.$el.append(item.element);
                                 });
 
                                 options.onAppend(_items);
@@ -174,37 +180,24 @@
                                 }
                             };
 
-                            var init = true,
-                                watchItems, watchCols;
-
-                            _setupColumns(1);
-
                             scope.auto = function(options) {
                                 return Math.round(options.$element[0].clientWidth / options.$columns[0].$el[0].clientWidth);
                             };
 
-                            $timeout(function() {
+                            var watchItems, watchCols;
 
-                                scope.columns = _prop('columns');
+                            _setupColumns(1);
 
-                                watchItems = scope.$watch(listIdentifier, function(n, o) {
-                                    _createItems(n);
+                            scope.columns = _prop('columns');
 
-                                    var newItems = [];
+                            watchItems = scope.$watch(listIdentifier, function(n, o) {
+                                _createItems(n);
 
-                                    for (var i = 0; i < n.length - (init ? 0 : o.length); i++) {
-                                        newItems.push(items[(init ? 0 : o.length) + i]);
-                                    }
+                                _flow(items);
+                            });
 
-                                    _flow(newItems);
-
-                                    init = false;
-                                });
-
-                                watchCols = scope.$watch('columns', function(n, o) {
-                                    _reflow();
-                                });
-
+                            watchCols = scope.$watch('columns', function(n, o) {
+                                _reflow();
                             });
 
                             var throttleOnAnimationFrame = function(func) {

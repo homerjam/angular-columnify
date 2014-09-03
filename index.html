@@ -10,7 +10,7 @@
 
 	<body ng-app="ExampleApp" ng-controller="ExampleCtrl">
 
-		<div class="columnify" ng-columnify="item in items" ng-columnify-options="{columns: 3}">
+		<div class="columnify" ng-columnify="item in items" ng-columnify-options="{columns: 3}" ng-click="createItems()">
 
 			<div class="item"
 				style="padding-top: {{item.ratio * 100}}%; background-color: {{item.color}};"
