@@ -174,28 +174,30 @@
 
                             _setupColumns(1); // setup columns initially for `auto` to work
 
-                            scope.columns = _prop('columns');
+                            $timeout(function(){
+                                scope.columns = _prop('columns');
 
-                            watchItems = scope.$watch(listIdentifier, function(n, o) {
-                                items = _createItems(n);
+                                watchItems = scope.$watch(listIdentifier, function(n, o) {
+                                    items = _createItems(n);
 
-                                _setupColumns(scope.columns);
-
-                                _appendItems(items); // append items initially to be able to read `clientHeight`
-
-                                $timeout(function() {
-                                    _appendItems(items);
-
-                                    hasInit = true;
-                                });
-                            });
-
-                            watchCols = scope.$watch('columns', function(n, o) {
-                                if (hasInit) {
                                     _setupColumns(scope.columns);
 
-                                    _appendItems(items);
-                                }
+                                    _appendItems(items); // append items initially to be able to read `clientHeight`
+
+                                    $timeout(function() {
+                                        _appendItems(items);
+
+                                        hasInit = true;
+                                    });
+                                });
+
+                                watchCols = scope.$watch('columns', function(n, o) {
+                                    if (hasInit) {
+                                        _setupColumns(scope.columns);
+
+                                        _appendItems(items);
+                                    }
+                                });
                             });
 
                             var throttleOnAnimationFrame = function(func) {
