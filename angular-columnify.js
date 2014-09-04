@@ -24,7 +24,7 @@
                             var resetItems = function(items) {
                                 angular.forEach(items, function(item) {
 
-                                    // Re-trigger autoplay
+                                    // re-trigger autoplay
                                     var videos = item.element[0].querySelectorAll('video[autoplay]');
                                     angular.forEach(videos, function(video) {
                                         video.play();
@@ -75,24 +75,29 @@
                                 });
                             };
 
-                            var items = [];
+                            var items;
 
                             var _createItems = function(list) {
-                                for (var i = items.length; i < list.length; i++) {
+                                var _items = [];
+
+                                for (var i = _items.length; i < list.length; i++) {
                                     var item = {};
                                     item.scope = scope.$new();
-                                    items.push(item);
+                                    item.scope.$index = i;
+                                    _items.push(item);
 
                                     _linker(item);
                                 }
 
-                                for (i = 0; i < items.length; i++) {
-                                    items[i].scope[valueIdentifier] = list[i];
+                                for (i = 0; i < _items.length; i++) {
+                                    _items[i].scope[valueIdentifier] = list[i];
 
-                                    if (!items[i].scope.$$phase) {
-                                        items[i].scope.$apply();
+                                    if (!_items[i].scope.$$phase) {
+                                        _items[i].scope.$apply();
                                     }
                                 }
+
+                                return _items;
                             };
 
                             var _shortestCol = function() {
@@ -100,7 +105,7 @@
                                     height = options.$columns[0].height;
 
                                 for (var i = 1; i < options.$columns.length; i++) {
-                                    if (options.$columns[i].height <= height) {
+                                    if (options.$columns[i].height < height) {
                                         shortest = i;
                                         height = options.$columns[i].height;
                                     }
@@ -130,13 +135,20 @@
                                 angular.forEach(_items, function(item, i) {
                                     var col = _shortestCol();
 
+                                    if (item.height === undefined) { // this is the first time an item has been appended so we can't get height anyway
+                                        item.height = 0;
+
+                                    } else if (item.height === 0) { // height was not read last time (or it was really `0`), lets check again
+                                        item.height = item.element[0].clientHeight;
+                                    }
+
                                     item.col = col;
 
-                                    col.height += item.element[0].clientHeight;
+                                    col.height += item.height;
                                 });
 
                                 angular.forEach(_items, function(item, i) {
-                                    item.col.$el.append(item.element);
+                                    item.col.$el.append(item.element[0]);
                                 });
 
                                 options.onAppend(_items);
@@ -144,32 +156,6 @@
                                 if (options.resetItemsOnAppend) {
                                     options.resetItems(_items);
                                 }
-                            };
-
-                            var _flow = function(_items) {
-                                var tmp = angular.element('<div class="temp" style="visibility: hidden;" />');
-
-                                iElement.append(tmp);
-
-                                var items = [];
-
-                                angular.forEach(_items, function(item, i) {
-                                    items.push(item.element[0]);
-                                });
-
-                                tmp.append(items);
-
-                                $timeout(function() {
-                                    _appendItems(_items);
-
-                                    tmp.remove();
-                                });
-                            };
-
-                            var _reflow = function() {
-                                _setupColumns(scope.columns);
-
-                                _appendItems(items);
                             };
 
                             var _resize = function() {
@@ -184,22 +170,32 @@
                                 return Math.round(options.$element[0].clientWidth / options.$columns[0].$el[0].clientWidth);
                             };
 
-                            var watchItems, watchCols;
+                            var watchItems, watchCols, hasInit = false;
 
-                            _setupColumns(1);
+                            _setupColumns(1); // setup columns initially for `auto` to work
 
-                            $timeout(function() {
-                                scope.columns = _prop('columns');
+                            scope.columns = _prop('columns');
 
-                                watchItems = scope.$watch(listIdentifier, function(n, o) {
-                                    _createItems(n);
+                            watchItems = scope.$watch(listIdentifier, function(n, o) {
+                                items = _createItems(n);
 
-                                    _flow(items);
+                                _setupColumns(scope.columns);
+
+                                _appendItems(items); // append items initially to be able to read `clientHeight`
+
+                                $timeout(function() {
+                                    _appendItems(items);
+
+                                    hasInit = true;
                                 });
+                            });
 
-                                watchCols = scope.$watch('columns', function(n, o) {
-                                    _reflow();
-                                });
+                            watchCols = scope.$watch('columns', function(n, o) {
+                                if (hasInit) {
+                                    _setupColumns(scope.columns);
+
+                                    _appendItems(items);
+                                }
                             });
 
                             var throttleOnAnimationFrame = function(func) {

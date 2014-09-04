@@ -1,27 +1,25 @@
 <html>
 
-	<head>
+<head>
 
-		<title>angular-columnify</title>
+    <title>angular-columnify</title>
 
-		<link rel="stylesheet" type="text/css" href="example/styles.css">
+    <link rel="stylesheet" type="text/css" href="example/styles.css">
 
-	</head>
+</head>
 
-	<body ng-app="ExampleApp" ng-controller="ExampleCtrl">
+<body ng-app="ExampleApp" ng-controller="ExampleCtrl">
 
-		<div class="columnify" ng-columnify="item in items" ng-columnify-options="{columns: 3}" ng-click="createItems()">
+    <div class="columnify" ng-columnify="item in items" ng-columnify-options="{columns: 'auto'}" ng-click="createItems()">
 
-			<div class="item"
-				style="padding-top: {{item.ratio * 100}}%; background-color: {{item.color}};"
-				></div>
+        <div class="item" style="padding-top: {{item.ratio * 100}}%; background-color: {{item.color}};" data-index="{{$index + 1}}"></div>
 
-		</div>
+    </div>
 
-		<script type="text/javascript" src="http://code.angularjs.org/1.2.4/angular.min.js"></script>
-		<script type="text/javascript" src="angular-columnify.js"></script>
-		<script type="text/javascript" src="example/app.js"></script>
+    <script type="text/javascript" src="http://code.angularjs.org/1.2.4/angular.min.js"></script>
+    <script type="text/javascript" src="angular-columnify.js"></script>
+    <script type="text/javascript" src="example/app.js"></script>
 
-	</body>
+</body>
 
 </html>

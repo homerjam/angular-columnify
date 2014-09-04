@@ -4,10 +4,10 @@ angular.module('ExampleCtrl', []).controller('ExampleCtrl', ['$scope',
     	$scope.createItems = function() {
 	        $scope.items = [];
 
-	        for (var i = 0; i < 500; i++) {
+	        for (var i = 0; i < 100; i++) {
 
 	            $scope.items[i] = {
-	                ratio: Math.random() * 1.5,
+	                ratio: Math.max(0.4, Math.random() * 2),
 	                color: '#' + ('000000' + Math.floor(Math.random()*16777215).toString(16)).slice(-6)
 	            };
 
