@@ -97,9 +97,9 @@
 
                             var _shortestCol = function() {
                                 var shortest = 0,
-                                    height = Infinity;
+                                    height = options.$columns[0].height;
 
-                                for (var i in options.$columns) {
+                                for (var i = 1; i < options.$columns.length; i++) {
                                     if (options.$columns[i].height <= height) {
                                         shortest = i;
                                         height = options.$columns[i].height;
@@ -188,16 +188,18 @@
 
                             _setupColumns(1);
 
-                            scope.columns = _prop('columns');
+                            $timeout(function() {
+                                scope.columns = _prop('columns');
 
-                            watchItems = scope.$watch(listIdentifier, function(n, o) {
-                                _createItems(n);
+                                watchItems = scope.$watch(listIdentifier, function(n, o) {
+                                    _createItems(n);
 
-                                _flow(items);
-                            });
+                                    _flow(items);
+                                });
 
-                            watchCols = scope.$watch('columns', function(n, o) {
-                                _reflow();
+                                watchCols = scope.$watch('columns', function(n, o) {
+                                    _reflow();
+                                });
                             });
 
                             var throttleOnAnimationFrame = function(func) {
