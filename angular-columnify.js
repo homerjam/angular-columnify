@@ -39,8 +39,7 @@
                                 columns: 'auto',
                                 onAppend: function(items) {},
                                 resetItemsOnAppend: true,
-                                resetItems: resetItems,
-                                forceHorizontalOrder: false
+                                resetItems: resetItems
                             };
 
                             var options = angular.extend(defaults, scope.$eval(iAttrs.ngColumnifyOptions));
@@ -115,14 +114,6 @@
                                 return options.$columns[shortest];
                             };
 
-                            var nextCol = 0;
-
-                            var _nextCol = function() {
-                                var targetCol = nextCol;
-                                nextCol = nextCol + 1 <= options.$columns.length - 1 ? nextCol + 1 : 0;
-                                return options.$columns[targetCol];
-                            };
-
                             var _setupColumns = function(cols) {
                                 iElement.attr('data-columns', cols);
 
@@ -142,7 +133,7 @@
 
                             var _appendItems = function(_items) {
                                 angular.forEach(_items, function(item, i) {
-                                    var col = options.forceHorizontalOrder ? _nextCol() : _shortestCol();
+                                    var col = _shortestCol();
 
                                     if (item.height === undefined) { // this is the first time an item has been appended so we can't get height anyway
                                         item.height = 0;
