@@ -177,7 +177,7 @@
                             $timeout(function(){
                                 scope.columns = _prop('columns');
 
-                                watchItems = scope.$watchCollection(listIdentifier, function(n, o) {
+                                watchItems = scope.$watch(listIdentifier, function(n, o) {
                                     items = _createItems(n);
 
                                     _setupColumns(scope.columns);
