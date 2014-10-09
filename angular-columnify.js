@@ -184,7 +184,7 @@
                                         newItems = n.slice(o.length,n.length);
                                     }
 
-                                    items = _createItems(n);
+                                    items = _createItems(newItems);
 
                                     if (!hasInit) {
                                         _setupColumns(scope.columns);
