@@ -178,9 +178,17 @@
                                 scope.columns = _prop('columns');
 
                                 watchItems = scope.$watch(listIdentifier, function(n, o) {
+                                    var newItems = n;
+
+                                    if (hasInit) {
+                                        newItems = n.slice(o.length,n.length);
+                                    }
+
                                     items = _createItems(n);
 
-                                    _setupColumns(scope.columns);
+                                    if (!hasInit) {
+                                        _setupColumns(scope.columns);
+                                    }
 
                                     _appendItems(items); // append items initially to be able to read `clientHeight`
 
