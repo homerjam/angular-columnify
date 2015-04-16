@@ -121,7 +121,7 @@
 
                                 options.$columns = [];
                                 for (var i = 0; i < Math.max(1, cols); i++) {
-                                    var col = angular.element('<div class="column"/>');
+                                    var col = angular.element('<div class="column"/>').attr('data-column',i);
                                     iElement.prepend(col);
                                     options.$columns.unshift({
                                         $el: col,
