@@ -42,13 +42,13 @@ body {
 	}
 }
 
-.item {
+.box {
 	position: relative;
 	width: 100%;
 	margin-bottom: 1em;
 }
 
-.item:before {
+.box:before {
 	content: attr(data-index);
 	font-size: 5em;
 	color: #FFF;

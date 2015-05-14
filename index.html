@@ -10,13 +10,13 @@
 
 <body ng-app="ExampleApp" ng-controller="ExampleCtrl">
 
-    <div class="columnify" ng-columnify="item in items" ng-columnify-options="{columns: 'auto'}" ng-click="createItems()">
+    <div class="columnify" hj-columnify="item in items" hj-columnify-options="{columns: 'auto'}" ng-click="createItems()">
 
-        <div class="item" style="padding-top: {{item.ratio * 100}}%; background-color: {{item.color}};" data-index="{{$index + 1}}"></div>
+        <div class="box" style="padding-top: {{item.ratio * 100}}%; background-color: {{item.color}};" data-index="{{$index + 1}}"></div>
 
     </div>
 
-    <script type="text/javascript" src="http://code.angularjs.org/1.2.4/angular.min.js"></script>
+    <script type="text/javascript" src="http://code.angularjs.org/1.3.15/angular.min.js"></script>
     <script type="text/javascript" src="angular-columnify.js"></script>
     <script type="text/javascript" src="example/app.js"></script>
 
