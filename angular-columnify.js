@@ -49,7 +49,8 @@
                         resetItemsOnAppend: true,
                         resetItems: resetItems,
                         itemClass: 'item',
-                        columnClass: 'column'
+                        columnClass: 'column',
+                        columnSelector: '.column'
                     };
 
                     var options = angular.extend(defaults, $scope.$eval($attrs.hjColumnifyOptions));
@@ -87,7 +88,7 @@
                         });
                     };
 
-                    var items;
+                    var items = [];
 
                     var _createItems = function(list) {
                         var _items = [];
@@ -129,7 +130,7 @@
                     var _setupColumns = function(cols) {
                         $element.attr('data-columns', cols);
 
-                        angular.element($element[0].querySelectorAll('.' + options.columnClass)).remove();
+                        angular.element($element[0].querySelectorAll(options.columnSelector)).remove();
 
                         options.$columns = [];
                         for (var i = 0; i < Math.max(1, cols); i++) {
@@ -190,22 +191,18 @@
                         $scope.columns = _prop('columns');
 
                         watchItems = $scope.$watch(listIdentifier, function(n, o) {
-                            var newItems = n;
+                            var newItems = _createItems(n.slice(hasInit ? o.length : 0, n.length));
 
-                            if (hasInit) {
-                                newItems = n.slice(o.length, n.length);
-                            }
-
-                            items = _createItems(newItems);
+                            items = items.concat(newItems);
 
                             if (!hasInit) {
                                 _setupColumns($scope.columns);
                             }
 
-                            _appendItems(items); // append items initially to be able to read `clientHeight`
+                            _appendItems(newItems); // append items initially to be able to read `clientHeight`
 
                             $timeout(function() {
-                                _appendItems(items);
+                                _appendItems(newItems);
 
                                 hasInit = true;
                             });
