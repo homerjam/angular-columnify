@@ -190,13 +190,26 @@
                     $timeout(function() {
                         $scope.columns = _prop('columns');
 
+                        _setupColumns($scope.columns);
+
                         watchItems = $scope.$watch(listIdentifier, function(n, o) {
-                            var newItems = _createItems(n.slice(hasInit ? o.length : 0, n.length));
+                            var reset = false;
 
-                            items = items.concat(newItems);
+                            n.forEach(function(item, i) {
+                                if (o[i] !== item) {
+                                    reset = true;
+                                }
+                            });
 
-                            if (!hasInit) {
+                            var newItems = reset ? _createItems(n) : _createItems(n.slice(hasInit ? o.length : 0, n.length));
+
+                            if (reset) {
                                 _setupColumns($scope.columns);
+
+                                items = newItems;
+
+                            } else {
+                                items = items.concat(newItems);
                             }
 
                             _appendItems(newItems); // append items initially to be able to read `clientHeight`
