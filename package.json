@@ -1,6 +1,6 @@
 {
   "name": "angular-columnify",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Angular directive that creates balanced columns",
   "main": "index.js",
   "repository": {

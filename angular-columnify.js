@@ -177,6 +177,10 @@
 
             var resize = function () {
               numColumns = getOption('columns');
+
+              if (!$scope.$$phase) {
+                $scope.$apply();
+              }
             };
 
             var watchItems;
