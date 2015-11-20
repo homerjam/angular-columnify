@@ -32,7 +32,7 @@ Angular directive that creates balanced columns
 
 ## Installation
 
-`bower install angular-columnify --save`
+`npm i -S angular-columnify`
 
 
 ## Demo
