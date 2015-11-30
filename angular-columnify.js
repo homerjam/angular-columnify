@@ -198,12 +198,16 @@
                 var reset = false;
 
                 newItems.forEach(function (item, i) {
-                  if (oldItems[i] !== item) {
+                  if (oldItems[i] && !angular.equals(oldItems[i], item)) {
                     reset = true;
                   }
                 });
 
-                newItems = reset ? createItems(newItems) : createItems(newItems.slice(hasInit ? oldItems.length : 0, newItems.length));
+                if (!reset) {
+                    newItems = newItems.slice(hasInit ? oldItems.length : 0, newItems.length);
+                }
+
+                newItems = createItems(newItems);
 
                 if (reset) {
                   setupColumns(numColumns);
