@@ -236,20 +236,30 @@
               });
             };
 
-            var throttleOnAnimationFrame = function (func) {
+            var throttle = function (func) {
               var timeout;
               return function () {
                 var context = this;
                 var args = arguments;
-                $window.cancelAnimationFrame(timeout);
-                timeout = $window.requestAnimationFrame(function () {
-                  func.apply(context, args);
-                  timeout = null;
-                });
+
+                if ($window.requestAnimationFrame) {
+                  $window.cancelAnimationFrame(timeout);
+                  timeout = $window.requestAnimationFrame(function () {
+                    func.apply(context, args);
+                    timeout = null;
+                  });
+
+                } else {
+                  $timeout.cancel(timeout);
+                  timeout = $timeout(function () {
+                    func.apply(context, args);
+                    timeout = null;
+                  }, 1000 / 16);
+                }
               };
             };
 
-            var throttledResize = throttleOnAnimationFrame(resize);
+            var throttledResize = throttle(resize);
 
             angular.element($window).on('resize', throttledResize);
 
