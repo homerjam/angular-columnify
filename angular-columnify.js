@@ -1,15 +1,13 @@
-/*
-
-    Name: angular-columnify
-    Description: Angular directive that creates balanced columns
-    Author: jameshomer85@gmail.com
-    Licence: MIT
-    Usage: http://github.com/homerjam/angular-columnify
-
-*/
-
 (function () {
   'use strict';
+
+  /**
+  * Name: angular-columnify
+  * Description: Angular directive that creates balanced columns
+  * Author: jameshomer85@gmail.com
+  * Licence: MIT
+  * Usage: http://github.com/homerjam/angular-columnify
+  */
 
   angular.module('hj.columnify', [])
 
@@ -19,7 +17,7 @@
           restrict: 'AE',
           transclude: true,
           template: '<div class="{{::itemClass}}" ng-transclude></div>',
-          link: function link($scope, $element, $attrs, controller, transcludeFn) {
+          link: function link ($scope, $element, $attrs, controller, transcludeFn) {
             var match = $attrs.hjColumnify.match(/^\s*(.+)\s+in\s+(.*?)\s*$/);
 
             if (!match) {
@@ -45,7 +43,7 @@
             var defaults = {
               $element: $element,
               columns: 'auto',
-              onAppend: function () { },
+              onAppend: function () {},
               resetItemsOnAppend: true,
               resetItems: resetItems,
               itemClass: 'item',
@@ -204,7 +202,7 @@
                 });
 
                 if (!reset) {
-                    newItems = newItems.slice(hasInit ? oldItems.length : 0, newItems.length);
+                  newItems = newItems.slice(hasInit ? oldItems.length : 0, newItems.length);
                 }
 
                 newItems = createItems(newItems);
@@ -221,7 +219,10 @@
 
                 $timeout(function () {
                   appendItems(newItems);
+
                   hasInit = true;
+
+                  $scope.$emit('hjColumnify:init');
                 });
               });
 
