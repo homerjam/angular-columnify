@@ -53,7 +53,7 @@
 
             var options = angular.extend(defaults, $scope.$eval($attrs.hjColumnifyOptions));
 
-            options.columnSelector = options.columnSelector || '.' + options.columnClass.split(' ').join(' .');
+            options.columnSelector = options.columnSelector || '.' + options.columnClass.split(' ').join('.');
 
             $scope.itemClass = options.itemClass;
 
