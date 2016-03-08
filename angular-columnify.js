@@ -48,10 +48,12 @@
               resetItems: resetItems,
               itemClass: 'item',
               columnClass: 'column',
-              columnSelector: '.column',
+            // columnSelector: '.column',
             };
 
             var options = angular.extend(defaults, $scope.$eval($attrs.hjColumnifyOptions));
+
+            options.columnSelector = options.columnSelector || '.' + options.columnClass.split(' ').join(' .');
 
             $scope.itemClass = options.itemClass;
 
@@ -136,9 +138,9 @@
               for (var i = 0; i < Math.max(1, numColumns); i++) {
                 var column = angular.element('<div class="' + options.columnClass + '"/>').attr('data-column', i);
 
-                $element.prepend(column);
+                $element.append(column);
 
-                columns.unshift({
+                columns.push({
                   element: column,
                   items: [],
                   height: 0,
@@ -272,9 +274,9 @@
 
             $timeout(init);
 
-          }
+          },
         };
-      }
+      },
     ]);
 
 })();
