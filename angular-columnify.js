@@ -115,18 +115,26 @@
             };
 
             var shortestColumn = function (item) {
-              var shortestIdx = 0;
-              var height = columns[0].height;
               var tollerance = 1;
 
-              for (var i = 1; i < columns.length; i++) {
-                if (Math.abs(columns[i].height - (height + item.height)) <= tollerance || columns[i].height < height) {
-                  shortestIdx = i;
-                  height = columns[i].height;
-                }
-              }
+              var columnHeights = columns.map(function (column, i) {
+                return {
+                  index: i,
+                  height: column.height,
+                };
+              });
 
-              return columns[shortestIdx];
+              columnHeights = columnHeights.sort(function (a, b) {
+                if (a.height === b.height) {
+                  return 0;
+                } else if (Math.abs(a.height - b.height) < tollerance || a.height < b.height) {
+                  return -1;
+                } else {
+                  return 1;
+                }
+              });
+
+              return columns[columnHeights[0].index];
             };
 
             var setupColumns = function (numColumns) {
@@ -159,7 +167,7 @@
                 } else if (item.height === 0) { // height was not read last time (or it was really `0`), lets check again
                   item.width = item.element[0].clientWidth;
                   item.height = item.element[0].clientHeight;
-                  item.ratio = Math.floor((item.width / item.height) * 100) / 100; // normalise ratio across screen sizes
+                  item.ratio = Math.floor((item.width / item.height) * 10000) / 10000; // normalise ratio across screen sizes
                 }
 
                 item.height = item.width * item.ratio;
