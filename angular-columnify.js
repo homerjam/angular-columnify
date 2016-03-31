@@ -212,7 +212,7 @@
               watchItems = $scope.$watch(listIdentifier, function (newItems, oldItems) {
                 var reset = false;
 
-                if (oldItems.length === 0) {
+                if (newItems.length === 0 || oldItems.length === 0) {
                   reset = true;
                 }
 
