@@ -212,6 +212,10 @@
               watchItems = $scope.$watch(listIdentifier, function (newItems, oldItems) {
                 var reset = false;
 
+                if (oldItems.length === 0) {
+                  reset = true;
+                }
+
                 newItems.forEach(function (item, i) {
                   if (oldItems[i] && !angular.equals(oldItems[i], item)) {
                     reset = true;
