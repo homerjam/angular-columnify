@@ -115,7 +115,7 @@
             };
 
             var shortestColumn = function (item) {
-              var tollerance = 1;
+              var tollerance = 3;
 
               var columnHeights = columns.map(function (column, i) {
                 return {
@@ -125,9 +125,11 @@
               });
 
               columnHeights = columnHeights.sort(function (a, b) {
-                if (a.height === b.height) {
+                var dif = Math.abs(a.height - b.height);
+
+                if (a.height === b.height || dif < tollerance) {
                   return 0;
-                } else if (Math.abs(a.height - b.height) < tollerance || a.height < b.height) {
+                } else if (a.height < b.height) {
                   return -1;
                 } else {
                   return 1;
@@ -158,24 +160,22 @@
             };
 
             var appendItems = function (items) {
+              angular.forEach(columns, function (column) {
+                column.items = [];
+              });
+
               angular.forEach(items, function (item) {
                 if (item.height === undefined) { // this is the first time an item has been appended so we can't get height anyway
-                  item.width = 0;
                   item.height = 0;
-                  item.ratio = 0;
-
                 } else if (item.height === 0) { // height was not read last time (or it was really `0`), lets check again
-                  item.width = item.element[0].clientWidth;
                   item.height = item.element[0].clientHeight;
-                  item.ratio = Math.floor((item.width / item.height) * 10000) / 10000; // normalise ratio across screen sizes
                 }
-
-                item.height = item.width * item.ratio;
 
                 var column = shortestColumn(item);
 
                 item.column = column;
 
+                column.items.push(item);
                 column.height += item.height;
               });
 
