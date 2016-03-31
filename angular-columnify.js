@@ -142,7 +142,7 @@
             var setupColumns = function (numColumns) {
               $element.attr('data-columns', numColumns);
 
-              angular.element($element[0].querySelectorAll(options.columnSelector)).remove();
+              angular.element($element[0].querySelectorAll(options.columnSelector)).detach();
 
               columns = [];
 
