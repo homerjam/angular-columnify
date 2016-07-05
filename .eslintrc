@@ -1,5 +1,5 @@
 {
-  "extends": "airbnb/base",
+  "extends": "airbnb-base/legacy",
   "rules": {
     "comma-dangle": 1,
     "prefer-const": 0,

@@ -213,7 +213,7 @@
                 var reset = false;
 
                 newItems.forEach(function (item, i) {
-                  if (oldItems[i] && !angular.equals(oldItems[i], item)) {
+                  if (!oldItems[i] || !angular.equals(oldItems[i], item)) {
                     reset = true;
                   }
                 });
