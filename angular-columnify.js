@@ -142,7 +142,7 @@
             var setupColumns = function (numColumns) {
               $element.attr('data-columns', numColumns);
 
-              angular.element($element[0].querySelectorAll(options.columnSelector)).remove();
+              angular.element($element[0].querySelectorAll(options.columnSelector)).detach();
 
               columns = [];
 
@@ -211,6 +211,10 @@
 
               watchItems = $scope.$watch(listIdentifier, function (newItems, oldItems) {
                 var reset = false;
+
+                if (newItems.length === 0 || oldItems.length === 0) {
+                  reset = true;
+                }
 
                 newItems.forEach(function (item, i) {
                   if (!oldItems[i] || !angular.equals(oldItems[i], item)) {
