@@ -212,11 +212,13 @@
               watchItems = $scope.$watch(listIdentifier, function (newItems, oldItems) {
                 var reset = false;
 
-                newItems.forEach(function (item, i) {
-                  if (!oldItems[i] || !angular.equals(oldItems[i], item)) {
-                    reset = true;
-                  }
-                });
+                if (newItems.length === oldItems.length) {
+                  newItems.forEach(function (item, i) {
+                    if (!oldItems[i] || !angular.equals(oldItems[i], item)) {
+                      reset = true;
+                    }
+                  });
+                }
 
                 if (!reset) {
                   newItems = newItems.slice(hasInit ? oldItems.length : 0, newItems.length);
