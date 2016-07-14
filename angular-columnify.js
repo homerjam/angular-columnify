@@ -16,12 +16,12 @@
         return {
           restrict: 'AE',
           transclude: true,
-          template: '<div class="{{::itemClass}}" ng-transclude></div>',
+          template: '<div class="columnify__item {{::itemClass}}" ng-transclude></div>',
           link: function link ($scope, $element, $attrs, controller, transcludeFn) {
             var match = $attrs.hjColumnify.match(/^\s*(.+)\s+in\s+(.*?)\s*$/);
 
             if (!match) {
-              throw Error('Expected hjColumnify in form of "_item_ in _array_" but got "' + $attrs.hjColumnify + '".');
+              throw Error('Expected hjColumnify attr in form of "_item_ in _array_" but got "' + $attrs.hjColumnify + '".');
             }
 
             var valueIdentifier = match[1];
@@ -48,21 +48,27 @@
               resetItems: resetItems,
               itemClass: 'item',
               columnClass: 'column',
-            // columnSelector: '.column',
             };
 
             var options = angular.extend(defaults, $scope.$eval($attrs.hjColumnifyOptions));
 
-            options.columnSelector = options.columnSelector || '.' + options.columnClass.split(' ').join('.');
-
             $scope.itemClass = options.itemClass;
 
+            var autoSizerColumn;
+
             $scope.auto = function (options) {
-              if (!columns.length) {
-                return 0;
+              if (!autoSizerColumn) {
+                autoSizerColumn = angular.element('<div class="columnify__auto-sizer ' + options.columnClass + '" style="position: absolute; visibility: hidden" />');
+                $element.append(autoSizerColumn);
               }
 
-              return Math.round(options.$element[0].clientWidth / columns[0].element[0].clientWidth);
+              var _numColumns = Math.round(options.$element[0].clientWidth / autoSizerColumn[0].clientWidth);
+
+              if (isNaN(_numColumns)) {
+                throw Error('Failed to calculate numColumns. Possibly caused by hidden parent element.');
+              }
+
+              return _numColumns;
             };
 
             var getOption = function (propName) {
@@ -84,6 +90,7 @@
 
             var templateItem = $element.children();
             $element.children().remove();
+
             angular.element($element[0].previousElementSibling).after(angular.element('<!-- hjColumnify -->'));
 
             var linker = function (item) {
@@ -94,7 +101,7 @@
               });
             };
 
-            var numColumns = getOption('columns');
+            var numColumns;
 
             var createItems = function (list) {
               var items = [];
@@ -142,12 +149,12 @@
             var setupColumns = function (numColumns) {
               $element.attr('data-columns', numColumns);
 
-              angular.element($element[0].querySelectorAll(options.columnSelector)).remove();
+              angular.element($element[0].querySelectorAll('.columnify__column')).remove();
 
               columns = [];
 
               for (var i = 0; i < Math.max(1, numColumns); i++) {
-                var column = angular.element('<div class="' + options.columnClass + '"/>').attr('data-column', i);
+                var column = angular.element('<div class="columnify__column ' + options.columnClass + '"/>').attr('data-column', i);
 
                 $element.append(column);
 
@@ -202,8 +209,6 @@
             var watchColumns;
             var hasInit = false;
 
-            setupColumns(1); // setup columns initially for `auto` to work
-
             var init = function () {
               numColumns = getOption('columns');
 
@@ -218,7 +223,7 @@
                   }
                 });
 
-                if (newItems.length < oldItems.length) {
+                if (newItems.length === 0 || newItems.length < oldItems.length) {
                   reset = true;
                 }
 
