@@ -290,7 +290,7 @@
             angular.element($window).on('resize', throttledResize);
 
             $scope.$on('$destroy', function () {
-              angular.element($window).off('resize', resize);
+              angular.element($window).off('resize', throttledResize);
 
               watchItems();
               watchColumns();
