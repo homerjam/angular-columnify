@@ -54,15 +54,21 @@
 
             $scope.itemClass = options.itemClass;
 
-            var autoSizerColumn;
+            $element.css('position', 'relative');
+            $element.css('overflow', 'auto');
+            $element.css('width', '100%');
+
+            var autoSizer;
 
             $scope.auto = function (options) {
-              if (!autoSizerColumn) {
-                autoSizerColumn = angular.element('<div class="columnify__auto-sizer ' + options.columnClass + '" style="position: absolute; visibility: hidden" />');
-                $element.append(autoSizerColumn);
+              if (!autoSizer) {
+                var autoSizerWrapper = angular.element('<div style="position: absolute; width: 100%; visibility: hidden"></div>');
+                $element.append(autoSizerWrapper);
+                autoSizer = angular.element('<div class="columnify__auto-sizer ' + options.columnClass + '"></div>');
+                autoSizerWrapper.append(autoSizer);
               }
 
-              var _numColumns = Math.round(options.$element[0].clientWidth / autoSizerColumn[0].clientWidth);
+              var _numColumns = Math.round(options.$element[0].clientWidth / autoSizer[0].clientWidth);
 
               if (isNaN(_numColumns)) {
                 throw Error('Failed to calculate numColumns. Possibly caused by hidden parent element.');
