@@ -302,8 +302,11 @@
               watchColumns();
             });
 
-            $timeout(init);
+            $timeout(function () {
+              init();
 
+              $timeout(resize, 16);
+            });
           },
         };
       },
