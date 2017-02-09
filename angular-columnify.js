@@ -305,7 +305,7 @@
             $timeout(function () {
               init();
 
-              $timeout(resize, 16);
+              $timeout(resize, 100);
             });
           },
         };
